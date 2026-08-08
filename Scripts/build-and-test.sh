@@ -10,13 +10,24 @@ mkdir -p "$SCHEMA_DIR"
 
 ./Scripts/feature_flags_internal.py
 
+
+xcodebuild -workspace Signal.xcworkspace -scheme Signal -showdestinations
+
+TARGET_ID=$(xcodebuild -workspace Signal.xcworkspace -scheme Signal -showdestinations | \
+  awk -F'id:' '/variant:Designed for \[iPad,iPhone\]/ {split($2, a, "[, } ]"); print a[1]}')
+
+if [[ -z "$TARGET_ID" ]]; then
+  echo "Target not found"
+  exit 1
+fi
+
 echo
 set -o pipefail \
 && NSUnbufferedIO=YES xcodebuild \
   -workspace Signal.xcworkspace \
   -scheme Signal \
   -configuration "App Store Release" \
-  -destination 'platform=macOS,name=My Mac' \
+  -destination "id=$TARGET_ID" \
   SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD=YES \
   CODE_SIGNING_ALLOWED=YES \
   CODE_SIGNING_REQUIRED=NO \

@@ -94,37 +94,6 @@ class ExpirationNagView: ReminderView {
     }
 
     func expirationMessage() -> ExpirationMessage? {
-        let now = dateProvider()
-        lazy var daysUntilAppExpiry = DateUtil.daysFrom(
-            firstDate: now,
-            toSecondDate: appExpiry.expirationDate,
-        )
-
-        let osExpirationDate: Date = (
-            device.iosMajorVersion < osExpiry.minimumIosMajorVersion ? osExpiry.enforcedAfter : .distantFuture,
-        )
-
-        // If the OS is expired, say that.
-        if osExpirationDate < now {
-            return .osExpired(canUpgrade: device.canUpgrade(to: osExpiry.minimumIosMajorVersion))
-        }
-        // If the app expires before the OS, warn about that (within 10 days).
-        if appExpiry.expirationDate < osExpirationDate {
-            if appExpiry.expirationDate < now {
-                return .appExpired
-            }
-            if daysUntilAppExpiry <= 0 {
-                return .appWillExpireToday
-            }
-            if daysUntilAppExpiry <= 10 {
-                return .appWillExpireSoon(appExpiry.expirationDate)
-            }
-        }
-        // If the OS will expire "soon", say that.
-        if osExpirationDate < .distantFuture {
-            return .osWillExpireSoon(osExpiry.enforcedAfter, canUpgrade: device.canUpgrade(to: osExpiry.minimumIosMajorVersion))
-        }
-
         return nil
     }
 }

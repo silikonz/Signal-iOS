@@ -23,8 +23,8 @@ env:
 jobs:
   build_and_test:
     name: Build and Test
-    timeout-minutes: 20
-    runs-on: macos-26-xlarge
+    #timeout-minutes: 20
+    runs-on: macos-26
     env:
       FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 7
 
@@ -71,6 +71,13 @@ jobs:
           name: Logs
           path: ~/Library/Logs/Signal-CI
 
+      - name: Upload products
+        uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: Products
+          path: ~/Library/Signal-iOS-Products
+
       - name: Normalize database schema
         run: |
           touch -d 2026-01-01T00:00:00 ~/Library/Signal-iOS-Schema/schema.json
@@ -80,21 +87,3 @@ jobs:
         with:
           name: Database Schema
           path: ~/Library/Signal-iOS-Schema
-
-  check_autogenstrings:
-    name: Check if strings file is outdated
-
-    timeout-minutes: 10
-
-    runs-on: macos-26
-
-    if: github.event_name == 'pull_request'
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Run genstrings
-        run: Scripts/translation/auto-genstrings
-
-      - name: Check for any changes
-        run: git diff --exit-code

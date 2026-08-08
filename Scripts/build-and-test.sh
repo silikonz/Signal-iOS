@@ -15,7 +15,7 @@ set -o pipefail \
 && NSUnbufferedIO=YES xcodebuild \
   -workspace Signal.xcworkspace \
   -scheme Signal \
-  -configuration Release \
+  -configuration "App Store Release" \
   -destination 'platform=macOS,variant=Designed for iPad' \
   CODE_SIGNING_ALLOWED=YES \
   CODE_SIGNING_REQUIRED=NO \

@@ -41,10 +41,10 @@ public enum BuildFlags {
         public static let showOptimizeMedia = build <= .dev
 
         public static let restoreFailOnAnyError = build <= .beta
-        public static let detailedBenchLogging = build <= .internal
+        public static let detailedBenchLogging = false
         public static let archiveErrorDisplay = build <= .internal
 
-        public static let avoidAppAttestForDevs = build <= .dev
+        public static let avoidAppAttestForDevs = true
         public static let avoidStoreKitForTesters = build <= .beta
 
         public static let mediaErrorDisplay = build <= .beta
@@ -89,7 +89,7 @@ public enum BuildFlags {
 
     public enum ReleaseNotesChannel {
         public static let announcementFetch = true
-        public static let ignoreFetchDelay = build <= .internal
+        public static let ignoreFetchDelay = false
     }
 
     public enum LocalFileBackups {
@@ -146,9 +146,9 @@ extension BuildFlags {
 /// Flags that we'll leave in the code base indefinitely that are helpful for
 /// development should go here, rather than cluttering up BuildFlags.
 public enum DebugFlags {
-    public static let internalLogging = build <= .internal
+    public static let internalLogging = false
 
-    public static let betaLogging = build <= .beta
+    public static let betaLogging = false
 
     public static let testPopulationErrorAlerts = build <= .beta
 
@@ -156,15 +156,15 @@ public enum DebugFlags {
 
     public static let internalMegaphoneEligible = build <= .internal
 
-    public static let verboseNotificationLogging = build <= .internal
+    public static let verboseNotificationLogging = false
 
-    public static let deviceTransferVerboseProgressLogging = build <= .internal
+    public static let deviceTransferVerboseProgressLogging = false
 
     public static let messageDetailsExtraInfo = build <= .internal
 
     public static let exposeCensorshipCircumvention = build <= .internal
 
-    public static let extraDebugLogs = build <= .internal
+    public static let extraDebugLogs = false
 
     public static let messageSendsFail = TestableFlag(
         false,

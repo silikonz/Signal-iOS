@@ -18,7 +18,7 @@ set -o pipefail \
   -configuration Release \
   -destination 'platform=macOS,variant=Designed for iPad' \
   CODE_SIGNING_ALLOWED=YES \
-  CODE_SIGNING_REQUIRED=YES \
+  CODE_SIGNING_REQUIRED=NO \
   CODE_SIGN_IDENTITY="-" \
   AD_HOC_CODE_SIGNING_ALLOWED=YES \
   CODE_SIGN_STYLE="Manual" \

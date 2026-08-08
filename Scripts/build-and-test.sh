@@ -8,59 +8,28 @@ SCHEMA_DIR="$HOME/Library/Signal-iOS-Schema"
 rm -rf "$SCHEMA_DIR"
 mkdir -p "$SCHEMA_DIR"
 
-echo
-echo "Available iOS Simulator runtimes:"
-xcrun simctl list runtimes
+./Scripts/feature_flags_internal.py
 
-echo
-echo "Available iOS Simulators:"
-xcrun simctl list devices
-
-LATEST_IOS_RUNTIME=$(
-  xcrun simctl list runtimes -j \
-    | jq -r '.runtimes | map(select(.name | startswith("iOS"))) | sort_by(.version) | last | .identifier'
-)
-echo
-echo "Using latest iOS runtime: $LATEST_IOS_RUNTIME"
-
-LATEST_IOS_SIM_ID=$(
-  xcrun simctl list devices -j \
-    | jq -r --arg runtime "$LATEST_IOS_RUNTIME" '.devices[$runtime] | first | .udid'
-)
-echo
-echo "Using simulator: $LATEST_IOS_SIM_ID"
-
-echo
 set -o pipefail \
-&& NSUnbufferedIO=YES TEST_RUNNER_SCHEMA_DUMP_PATH="$SCHEMA_DIR/schema.json" xcodebuild \
+&& NSUnbufferedIO=YES xcodebuild \
   -workspace Signal.xcworkspace \
   -scheme Signal \
-  -destination "platform=iOS Simulator,id=$LATEST_IOS_SIM_ID" \
+  -configuration Release \
+  -destination 'platform=macOS,variant=Designed for iPad' \
+  CODE_SIGNING_ALLOWED=YES \
+  CODE_SIGNING_REQUIRED=YES \
+  CODE_SIGN_IDENTITY="-" \
+  AD_HOC_CODE_SIGNING_ALLOWED=YES \
+  CODE_SIGN_STYLE="Manual" \
+  DEVELOPMENT_TEAM="" \
+  PROVISIONING_PROFILE_SPECIFIER="" \
   -disableAutomaticPackageResolution \
-  -test-timeouts-enabled YES \
-  -maximum-test-execution-time-allowance 300 \
-  -default-test-execution-time-allowance 60 \
-  -resultBundlePath "$LOG_DIR/TestResult.xcresult" \
-  build test \
-  2>&1 \
-| tee "$LOG_DIR/Signal-CI.log" \
-| xcbeautify \
-  --renderer github-actions \
-  --disable-logging \
-| while IFS= read -r line; do
-  printf '[%s] %s\n' "$(date +%H:%M:%S)" "$line"
-done
+  -derivedDataPath ./build \
+  build
 
 XCODEBUILD_RESULT_CODE=$?
 
-xcrun \
-  xcresulttool \
-  get \
-  test-results \
-  summary \
-  --path "$LOG_DIR/TestResult.xcresult" \
-  > "$LOG_DIR/TestResultSummary.json"
-
-Scripts/parse-xcresult.py "$LOG_DIR/TestResultSummary.json"
+PRODUCTS_DIR="$HOME/Library/Signal-iOS-Products"
+mv ./build/Build/Products/ "$PRODUCTS_DIR"
 
 exit $XCODEBUILD_RESULT_CODE

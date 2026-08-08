@@ -1132,12 +1132,7 @@ public class RemoteConfigManagerImpl: RemoteConfigManager {
     }
 
     private func checkClientExpiration(valueFlag: String?) async {
-        if let minimumVersions = parseClientExpiration(valueFlag: valueFlag) {
-            await appExpiry.setExpirationDateForCurrentVersion(remoteExpirationDate(from: minimumVersions), now: dateProvider(), db: db)
-        } else {
-            // If it's not valid, there's a typo in the config, err on the safe side
-            // and leave it alone.
-        }
+        return
     }
 
     private func parseClientExpiration(valueFlag: String?) -> [MinimumVersion]? {

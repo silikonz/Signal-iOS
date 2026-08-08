@@ -10,6 +10,7 @@ mkdir -p "$SCHEMA_DIR"
 
 ./Scripts/feature_flags_internal.py
 
+echo
 set -o pipefail \
 && NSUnbufferedIO=YES xcodebuild \
   -workspace Signal.xcworkspace \
@@ -25,7 +26,15 @@ set -o pipefail \
   PROVISIONING_PROFILE_SPECIFIER="" \
   -disableAutomaticPackageResolution \
   -derivedDataPath ./build \
-  build
+  build \
+  2>&1 \
+| tee "$LOG_DIR/Signal-CI.log" \
+| xcbeautify \
+  --renderer github-actions \
+  --disable-logging \
+| while IFS= read -r line; do
+  printf '[%s] %s\n' "$(date +%H:%M:%S)" "$line"
+done
 
 XCODEBUILD_RESULT_CODE=$?
 

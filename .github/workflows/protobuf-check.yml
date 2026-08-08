@@ -1,21 +1,7 @@
 name: protobuf-check
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/protobuf-check.yml'
-      - '**/*.pb.swift'
-      - '**/*.proto'
-      - 'SignalServiceKit/Protos/Generated/**'
-  push:
-    branches:
-      - main
-      - release/*
-    paths:
-      - '.github/workflows/protobuf-check.yml'
-      - '**/*.pb.swift'
-      - '**/*.proto'
-      - 'SignalServiceKit/Protos/Generated/**'
+  workflow_dispatch
 
 # On PRs, "head_ref" is defined and is consistent across updates. On
 # pushes, it's not defined, so we use "run_id", which is unique across

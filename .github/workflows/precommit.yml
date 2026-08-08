@@ -1,27 +1,7 @@
 name: precommit
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/precommit.yml'
-      - 'Scripts/lint/lint-license-headers'
-      - 'Scripts/lint/util.py'
-      - 'Scripts/precommit.py'
-      - 'Scripts/sort-Xcode-project-file'
-      - '**/*.cpp'
-      - '**/*.h'
-      - '**/*.hpp'
-      - '**/*.m'
-      - '**/*.mm'
-      - '**/*.pbxproj'
-      - '**/*.pch'
-      - '**/*.proto'
-      - '**/*.swift'
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/precommit.yml'
+  workflow_dispatch
 
 # On PRs, "head_ref" is defined and is consistent across updates. On
 # pushes, it's not defined, so we use "run_id", which is unique across

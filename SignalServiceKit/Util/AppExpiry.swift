@@ -159,22 +159,10 @@ public final class AppExpiry {
     public static let AppExpiryDidChange = Notification.Name("AppExpiryDidChange")
 
     public var expirationDate: Date {
-        let state = expirationState.get()
-        switch state.mode {
-        case .default:
-            return defaultExpirationDate
-        case .atDate:
-            guard let expirationDate = state.expirationDate else {
-                owsFailDebug("Missing expiration date, expiring immediately")
-                return .distantPast
-            }
-            return expirationDate
-        case .immediately:
-            return .distantPast
-        }
+        return .distantFuture
     }
 
-    public func isExpired(now: Date) -> Bool { expirationDate < now }
+    public func isExpired(now: Date) -> Bool { return false }
 
     public static let defaultExpirationInterval: TimeInterval = 90 * .day
 

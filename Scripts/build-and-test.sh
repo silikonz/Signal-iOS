@@ -16,7 +16,7 @@ set -o pipefail \
   -workspace Signal.xcworkspace \
   -scheme Signal \
   -configuration "App Store Release" \
-  -destination 'platform=macOS,variant=Designed for [iPad,iPhone]' \
+  -destination 'platform=macOS,variant=Designed for [iPad\,iPhone]' \
   SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD=YES \
   CODE_SIGNING_ALLOWED=YES \
   CODE_SIGNING_REQUIRED=NO \
